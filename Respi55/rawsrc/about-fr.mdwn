@@ -1,0 +1,28 @@
+# Respi 5/5
+#### Copyright 2014-2015 Julien Viard de Galbert
+
+### Contributions bienvenues
+Pour les rapports de bogues, suggestions, traductions ou d’autres contributions, utilisez de préférence github, soit par le système de tickets soit par *pull-requests*.
+
+La page du projet sur github est <https://github.com/JulienVdG/respi55-android>.
+
+### Remerciements
+Je tiens à remercier :
+<br /> &bull; ma femme, pour son aide, ses suggestions et son soutien au cours du développement de l’application ;
+<br /> &bull; Christine, de m’avoir présenté cette méthode de respiration.
+
+### Licence du programme
+Ce programme est un logiciel libre ; vous pouvez le redistribuer ou le modifier suivant les termes de la *GNU General Public License* telle que publiée par la *Free Software Foundation* ; soit la version 2 de la licence, soit (à votre gré) toute version ultérieure.
+
+Ce programme est distribué dans l’espoir qu’il sera utile, mais SANS AUCUNE GARANTIE ; sans même la garantie tacite de QUALITÉ MARCHANDE ou d’ADÉQUATION à UN BUT PARTICULIER. Consultez la *GNU General Public License* pour plus de détails.
+
+Vous devez avoir reçu une copie de la *GNU General Public License* en même temps que ce programme ; si ce n’est pas le cas, consultez <http://www.gnu.org/licenses>.
+
+### Licence des sons
+Les sons utilisés dans cette application sont sous licence [Creative Commons 0 (CC0)](http://creativecommons.org/publicdomain/zero/1.0/).
+
+Les fichiers sonores sont des travaux dérivés (modifiés manuellement, ré-échantillonnés ...) à partir de fichiers originaux téléchargés sur <http://www.freesound.org> :
+<br />&bull; Le tic-tac de l’horloge : <http://www.freesound.org/people/AntumDeluge/sounds/188033/>
+<br />&bull; Le gong final : <http://www.freesound.org/people/LloydEvans09/sounds/185824/>
+<br />&bull; Le ding de boîte à musique : <http://www.freesound.org/people/baujahr66/sounds/157271/>
+

@@ -1,0 +1,35 @@
+# Respi 5/5
+#### Copyright 2014-2015 Julien Viard de Galbert
+
+### Inputs welcome
+Please use github for bug reports, suggestions, translations or other contributions. Do it either through the ticket system or with pull-requests.
+
+The project's page on github is <https://github.com/JulienVdG/respi55-android>.
+
+### Thanks
+I would like to thank:
+<br />&bull; my wife, for the help, suggestions and support during the application development;
+<br />&bull; Christine, for introducing me to this breathing method.
+
+### Program License
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+### Sound License
+The sounds used in this application are licensed under [Creative Commons 0 (CC0)](http://creativecommons.org/publicdomain/zero/1.0/).
+
+The sound files are derived works (manually edited, re-sampled...) from originals files downloaded at <http://www.freesound.org>:
+<br />&bull; The second clock ticks: <http://www.freesound.org/people/AntumDeluge/sounds/188033/>
+<br />&bull; The end gong: <http://www.freesound.org/people/LloydEvans09/sounds/185824/>
+<br />&bull; The 5 seconds music box ding: <http://www.freesound.org/people/baujahr66/sounds/157271/>
+

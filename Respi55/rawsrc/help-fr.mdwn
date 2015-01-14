@@ -1,0 +1,25 @@
+#Mode d’emploi de Respi 5/5
+
+L’exercice (et donc l’application) est d’une grande simplicité : il vous suffit de respecter le rythme !
+
+1°) Appuyez sur &laquo;Démarrer&raquo; pour commencer la séance.<br />
+2°) Des chiffres 1 à 5 s’affichent, en même temps que le cercle grossit : inspirez de préférence par le nez.<br />
+3°) De 1 à 5, quand le cercle rétrécit : expirez par la bouche (comme si vous expulsiez mentalement tout votre stress).<br />
+4°) Enfin, appuyez sur &laquo;Arrêter&raquo; pour terminer l’exercice.<br />
+
+
+####Indications importantes
+**Durée** : 5 minutes minimum à raison de 5 secondes par cycle d’inspiration et 5 par expiration ( = soit 5 secondes pour inspirer et 5 secondes pour expirer).
+
+**Fréquence** : Pour être réellement efficace, l’exercice doit se faire pendant au moins 5 minutes 3 fois par jour (ou davantage bien sûr dès que vous en avez le temps et l’envie).
+
+####En plus, pour vous aider
+
+Pendant toute la durée de l’exercice, tentez de respecter une respiration abdominale (votre ventre se gonfle quand vous prenez de l’air et se dégonfle quand vous le soufflez). N’hésitez pas à mettre une main sur votre ventre pour vous aider.
+
+Toutes les 5 minutes, un petit cercle apparaîtra en haut à gauche de l’écran. Un nouveau s’ajoutera au précédent pour représenter les 5 dernières minutes écoulées.
+
+Vous pouvez commencer par une grande respiration : une profonde et lente inspiration suivie d’une profonde et lente expiration. Cette dernière achevée, appuyez sur &laquo;Démarrer&raquo; en commençant l’inspiration suivante.
+
+Au début, l’exercice peut vous paraître délicat et vous auriez peut-être préféré un rythme de 4 ou 6 secondes, mais n’ayez aucune crainte, quelques cycles suffisent pour s’adapter sans difficulté.
+

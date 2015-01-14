@@ -1,0 +1,54 @@
+<resources>
+    <!--
+         Respi 5/5
+
+         Copyright 2014-2015 Julien Viard de Galbert
+
+         This file is part of Respi 5/5.
+
+         Respi 5/5 is free software: you can redistribute it and/or modify
+         it under the terms of the GNU General Public License as published by
+         the Free Software Foundation, either version 2 of the License, or
+         (at your option) any later version.
+
+         Respi 5/5 is distributed in the hope that it will be useful,
+         but WITHOUT ANY WARRANTY; without even the implied warranty of
+         MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+         GNU General Public License for more details.
+
+         You should have received a copy of the GNU General Public License
+         along with Respi 5/5.  If not, see <http://www.gnu.org/licenses/>.
+    -->
+
+    <string name="title_activity_settings">Paramètres</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Dispaly settings -->
+    <string name="pref_display_title">Affichage</string>
+
+    <string name="pref_title_display_digits">Montrer les chiffres</string>
+    <string name="pref_summary_display_digits">Compte les secondes avec vous</string>
+
+    <!-- Sound settings -->
+    <string name="pref_sound_title">Son</string>
+
+    <string name="pref_title_sound_enable">Activer le son</string>
+    <string-array name="pref_sound_enable_titles">
+        <item>Toujours</item>
+        <item>Seulement avec un casque</item>
+        <item>Jamais</item>
+    </string-array>
+    <string-array name="pref_sound_enable_values">
+        <item>1</item>
+        <item>2</item>
+        <item>0</item>
+    </string-array>
+
+    <string name="pref_title_enable_ticks">Chaque seconde</string>
+    <string name="pref_summary_enable_ticks">Le Tic-Tac de l\'horloge</string>
+
+    <string name="pref_title_enable_5s">Toutes les 5 secondes</string>
+    <string name="pref_summary_enable_5s">Le ding d\'une boite à musique</string>
+
+</resources>
