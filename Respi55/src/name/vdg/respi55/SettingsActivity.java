@@ -20,6 +20,7 @@
 package name.vdg.respi55;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -60,7 +61,9 @@ public class SettingsActivity extends PreferenceActivity {
 	private void setupActionBar() {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 			// Show the Up button in the action bar.
-			getActionBar().setDisplayHomeAsUpEnabled(true);
+			ActionBar ab=getActionBar();
+			if (ab != null)
+				ab.setDisplayHomeAsUpEnabled(true);
 		}
 	}
 
