@@ -106,7 +106,8 @@ public class FullscreenActivity extends Activity {
 			@Override
 			@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 			public void onVisibilityChange(boolean visible) {
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+				// was HONEYCOMB_MR2 but the animate does not seam to work nice on ICS so...
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
 					// If the ViewPropertyAnimator API is available
 					// (Honeycomb MR2 and later), use it to animate the
 					// in-layout UI controls at the bottom of the
