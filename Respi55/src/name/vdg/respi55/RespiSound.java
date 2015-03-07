@@ -39,6 +39,7 @@ import android.util.Log;
 public class RespiSound extends BroadcastReceiver {
 	private static final String TAG = "RespiSound";
 
+	private RespiStateManager mRespiStateManager;
 	private AudioManager mAudioManager;
 	private SoundPool soundPool;
 	private int tick[] = new int[2], endSound, sound5sec;
@@ -56,7 +57,8 @@ public class RespiSound extends BroadcastReceiver {
 	private boolean mBtHeadsetOn = false;
 
 
-	public RespiSound(Context context) {
+	public RespiSound(RespiStateManager respiStateManager, Context context) {
+		mRespiStateManager = respiStateManager;
 
 		mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
@@ -246,7 +248,7 @@ public class RespiSound extends BroadcastReceiver {
 		boolean start = (enableTicks && !mEnableTicks);
 		boolean stop = (!enableTicks && mEnableTicks);
 		if (enableTicks != mEnableTicks && mEnable5s) {
-			long elapsed = System.nanoTime() - RespiStateManager.getStartTime();
+			long elapsed = System.nanoTime() - mRespiStateManager.getStartTime();
 			elapsed += 10000000; // add 10 ms to round up some timing errors
 			long sec = (elapsed/1000000000);
 			if(sec%5 == 5) {
@@ -299,10 +301,10 @@ public class RespiSound extends BroadcastReceiver {
 
 	private void schedule(Runnable runable, long milliPerriod)
 	{
-		if (RespiStateManager.isStarted())
+		if (mRespiStateManager.isStarted())
 		{
 			// start in milli from nano
-			long start = RespiStateManager.getStartTime()/1000000;
+			long start = mRespiStateManager.getStartTime()/1000000;
 			//
 			long now = SystemClock.uptimeMillis();
 			// compute next date based on nanoClock
@@ -314,7 +316,7 @@ public class RespiSound extends BroadcastReceiver {
 	Runnable mTickRunnable = new Runnable() {
 		@Override
 		public void run() {
-			long elapsed = System.nanoTime() - RespiStateManager.getStartTime();
+			long elapsed = System.nanoTime() - mRespiStateManager.getStartTime();
 			elapsed += 10000000; // add 10 ms to round up some timing errors
 			long sec = (elapsed/1000000000);
 			int oddEven=-1;

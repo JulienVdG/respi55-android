@@ -72,6 +72,11 @@ public class FullscreenActivity extends Activity {
 	 */
 	private SystemUiHider mSystemUiHider;
 
+	/**
+	 * The instance of the {@link RespiStateManager} for this activity.
+	 */
+	private RespiStateManager mRespiStateManager;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +86,12 @@ public class FullscreenActivity extends Activity {
 
 		setContentView(R.layout.activity_fullscreen);
 
+		mRespiStateManager = RespiStateManager.getInstance(this);
+
 		final View controlsView = findViewById(R.id.fullscreen_content_controls);
-		final View contentView = findViewById(R.id.fullscreen_content);
+		final RespiView contentView = (RespiView) findViewById(R.id.fullscreen_content);
+
+		contentView.setRespiStateManager(mRespiStateManager);
 
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
@@ -127,7 +136,7 @@ public class FullscreenActivity extends Activity {
 						getActionBar().hide();
 					}
 				}
-				if (visible && AUTO_HIDE && RespiStateManager.isStarted()) {
+				if (visible && AUTO_HIDE && mRespiStateManager.isStarted()) {
 					// Schedule a hide().
 					delayedHide(AUTO_HIDE_DELAY_MILLIS);
 				}
@@ -138,7 +147,7 @@ public class FullscreenActivity extends Activity {
 		contentView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (TOGGLE_ON_CLICK && RespiStateManager.isStarted()) {
+				if (TOGGLE_ON_CLICK && mRespiStateManager.isStarted()) {
 					mSystemUiHider.toggle();
 				} else {
 					mSystemUiHider.show();
@@ -161,7 +170,7 @@ public class FullscreenActivity extends Activity {
 		// are available.
 
 		final Button button = (Button) findViewById(R.id.startstop_button);
-		if (RespiStateManager.isStarted()) {
+		if (mRespiStateManager.isStarted()) {
 			button.setText(R.string.stop_button);
 			delayedHide(100);
 		} else {
@@ -172,7 +181,7 @@ public class FullscreenActivity extends Activity {
 	@Override
 	public void onWindowFocusChanged (boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		if (hasFocus) RespiStateManager.getInstance(this).setAudioFocus(this);
+		if (hasFocus) mRespiStateManager.setAudioFocus(this);
 	}
 
 	/**
@@ -196,7 +205,7 @@ public class FullscreenActivity extends Activity {
 	Runnable mHideRunnable = new Runnable() {
 		@Override
 		public void run() {
-			if (RespiStateManager.isStarted()) {
+			if (mRespiStateManager.isStarted()) {
 				mSystemUiHider.hide();
 			}
 		}
@@ -265,19 +274,18 @@ public class FullscreenActivity extends Activity {
 	public void onStartStop(View view) {
 		// Do something in response to button
 		final Button button = (Button) view;
-		final RespiStateManager rsm = RespiStateManager.getInstance(this);
-		if (RespiStateManager.isStarted()) {
+		if (mRespiStateManager.isStarted()) {
 			// Stop it
 			button.setText(R.string.start_button);
 
-			rsm.stop();
+			mRespiStateManager.stop();
 
 			mSystemUiHider.show();
 		} else {
 			// Start it
 			button.setText(R.string.stop_button);
 
-			rsm.start();
+			mRespiStateManager.start();
 
 			delayedHide(100);
 		}

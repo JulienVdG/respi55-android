@@ -64,7 +64,7 @@ public class RespiStateManager implements OnSharedPreferenceChangeListener {
 
 
 	public RespiStateManager(Context context) {
-		mRespiSound = new RespiSound(context);
+		mRespiSound = new RespiSound(this, context);
 
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -132,15 +132,13 @@ public class RespiStateManager implements OnSharedPreferenceChangeListener {
 		mNotificationBuilder.setOngoing(true);
 	}
 
-	public static long getStartTime() {
-		if (null == holder) return Long.MAX_VALUE;
-		return holder.mStartTime;
+	public long getStartTime() {
+		return mStartTime;
 	}
 
 
-	public static boolean isStarted() {
-		if (null == holder) return false;
-		return holder.mStarted;
+	public boolean isStarted() {
+		return mStarted;
 	}
 
 	public void start()
@@ -169,9 +167,8 @@ public class RespiStateManager implements OnSharedPreferenceChangeListener {
 		mRespiSound.updateSoundMode(mSoundMode);
 	}
 
-	public static boolean isDigitDisplayed()
+	public boolean isDigitDisplayed()
 	{
-		if (null == holder) return true;
-		return holder.mDisplayDigits;
+		return mDisplayDigits;
 	}
 }

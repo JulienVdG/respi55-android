@@ -25,11 +25,13 @@ import android.view.SurfaceHolder;
 public class RespiViewThread extends Thread {
 	private RespiView mView;
 	private SurfaceHolder mHolder;
+	private RespiStateManager mRespiStateManager;
 	private boolean mRun = false;
 
 	public RespiViewThread(RespiView respiview) {
 		mView = respiview;
 		mHolder = mView.getHolder();
+		mRespiStateManager = mView.getRespiStateManager();
 	}
 
 	// Set current thread state
@@ -48,7 +50,7 @@ public class RespiViewThread extends Thread {
 
 			if (canvas != null) {
 				// Update state based on elapsed time
-				long elapsed = System.nanoTime() - RespiStateManager.getStartTime();
+				long elapsed = System.nanoTime() - mRespiStateManager.getStartTime();
 
 				// Render updated state
 				mView.doDraw(canvas,elapsed);

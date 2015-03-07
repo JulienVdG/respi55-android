@@ -37,6 +37,7 @@ import android.view.SurfaceView;
  *
  */
 public class RespiView extends SurfaceView implements SurfaceHolder.Callback {
+	private RespiStateManager mRespiStateManager = null;
 	private RespiViewThread mThread;
 	public static float mWidth;
 	public static float mHeight;
@@ -66,6 +67,14 @@ public class RespiView extends SurfaceView implements SurfaceHolder.Callback {
 		mTextPaint.setTextAlign(Paint.Align.CENTER);
 		mTextPaint.setTypeface(Typeface.DEFAULT_BOLD);
 		mThread = new RespiViewThread(this);
+	}
+
+	public void setRespiStateManager (RespiStateManager rsm) {
+		mRespiStateManager = rsm;
+	}
+
+	public RespiStateManager getRespiStateManager() {
+		return mRespiStateManager;
 	}
 
 	@Override
@@ -123,7 +132,7 @@ public class RespiView extends SurfaceView implements SurfaceHolder.Callback {
 	public void doDraw(Canvas canvas, long elapsed) {
 		mLock.lock();  // block until condition holds
 		try {
-			boolean started = RespiStateManager.isStarted();
+			boolean started = mRespiStateManager.isStarted();
 			if (mStarted != started)
 			{
 				mStarted = started;
@@ -150,7 +159,7 @@ public class RespiView extends SurfaceView implements SurfaceHolder.Callback {
 					}
 				}
 				canvas.drawCircle(mWidth/2, mHeight/2, mMaxRadius*(0.55f-0.45f*wave), mCirclePaint);
-				if (RespiStateManager.isDigitDisplayed()) {
+				if (mRespiStateManager.isDigitDisplayed()) {
 					int number=(int) ((elapsed/1000000000) % 5 + 1);
 					mTextPaint.setAlpha((int) Math.ceil(255*Math.cos((elapsed%1000000000)*Math.PI/2000000000.0)));
 					canvas.drawText(Integer.toString(number), mWidth/2, mTextY, mTextPaint);
