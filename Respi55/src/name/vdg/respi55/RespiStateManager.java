@@ -29,15 +29,11 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.media.AudioManager;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
+//import android.util.Log;
 
 public class RespiStateManager implements OnSharedPreferenceChangeListener {
-	private static final String TAG = "RespiStateManager";
+//	private static final String TAG = "RespiStateManager";
 	private static final int NOTIFICATION_ID = R.string.notification_message;
-	/**
-	 * The View
-	 */
-	private RespiView mRespiView;
 
 	/**
 	 * The Sound manager
@@ -84,12 +80,6 @@ public class RespiStateManager implements OnSharedPreferenceChangeListener {
 		sp.registerOnSharedPreferenceChangeListener(this);
 
 		setupNotification(context);
-	}
-
-	public void setRespiView(RespiView respiView)
-	{
-		Log.d(TAG, "setRespiView " + respiView);
-		mRespiView = respiView;
 	}
 
 	@Override
@@ -157,7 +147,6 @@ public class RespiStateManager implements OnSharedPreferenceChangeListener {
 	{
 		mStarted = true;
 		mStartTime = System.nanoTime();
-		mRespiView.start();
 		mRespiSound.start(mSoundMode, mEnableTicks, mEnable5s);
 		// Send the notification.
 		mNM.notify(NOTIFICATION_ID, mNotificationBuilder.build());
@@ -167,7 +156,6 @@ public class RespiStateManager implements OnSharedPreferenceChangeListener {
 	{
 		mStarted = false;
 		mStartTime = Long.MAX_VALUE;
-		mRespiView.stop();
 		mRespiSound.stop();
 		// Cancel the persistent notification.
 		mNM.cancel(NOTIFICATION_ID);

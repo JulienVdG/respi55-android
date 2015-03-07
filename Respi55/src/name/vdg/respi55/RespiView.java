@@ -97,16 +97,6 @@ public class RespiView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 
-	public void start() {
-		mStarted = true;
-		updateDrawingValues();
-	}
-
-	public void stop() {
-		mStarted = false;
-		updateDrawingValues();
-	}
-
 	private void updateDrawingValues() {
 		mLock.lock();  // block until condition holds
 		try {
@@ -138,7 +128,8 @@ public class RespiView extends SurfaceView implements SurfaceHolder.Callback {
 			{
 				mStarted = started;
 				updateDrawingValues();
-			}			canvas.drawColor(Color.BLACK);
+			}
+			canvas.drawColor(Color.BLACK);
 			float perriod = 10; // in sec
 			float endPerriod = 5 * 60; // in sec
 			float wave=(float)(Math.cos(elapsed*2.0*Math.PI/(perriod*1000000000.0)));
