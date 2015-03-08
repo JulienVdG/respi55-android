@@ -32,6 +32,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -48,6 +49,8 @@ import android.widget.Button;
  * @see SystemUiHider
  */
 public class FullscreenActivity extends Activity {
+	private static final String TAG = "FullscreenActivity";
+
 	/**
 	 * Whether or not the system UI should be auto-hidden after
 	 * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -89,6 +92,7 @@ public class FullscreenActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d(TAG, "onCreate");
 
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -179,6 +183,7 @@ public class FullscreenActivity extends Activity {
 
 	@Override
 	protected void onResume() {
+		Log.d(TAG, "onResume");
 		super.onResume();
 		Intent intent= new Intent(this, RespiStateManager.class);
 		bindService(intent, mConnection,
@@ -187,6 +192,7 @@ public class FullscreenActivity extends Activity {
 
 	@Override
 	protected void onPause() {
+		Log.d(TAG, "onPause");
 		super.onPause();
 		unbindService(mConnection);
 	}
@@ -195,6 +201,7 @@ public class FullscreenActivity extends Activity {
 
 		public void onServiceConnected(ComponentName className, 
 				IBinder binder) {
+			Log.d(TAG, "onServiceConnected");
 			RespiStateManager.LocalBinder b = (RespiStateManager.LocalBinder) binder;
 			mRespiStateManager = b.getService();
 			mRespiView.setRespiStateManager(mRespiStateManager);
@@ -208,6 +215,7 @@ public class FullscreenActivity extends Activity {
 		}
 
 		public void onServiceDisconnected(ComponentName className) {
+			Log.d(TAG, "onServiceDisconnected");
 			mRespiStateManager = null;
 			mRespiView.setRespiStateManager(mRespiStateManager);
 		}
@@ -215,6 +223,7 @@ public class FullscreenActivity extends Activity {
 
 	@Override
 	public void onWindowFocusChanged (boolean hasFocus) {
+		Log.d(TAG, "onWindowFocusChanged");
 		super.onWindowFocusChanged(hasFocus);
 		if (hasFocus) mRespiStateManager.setAudioFocus(this);
 	}
@@ -307,6 +316,7 @@ public class FullscreenActivity extends Activity {
 
 	/** Called when the user clicks the StartStop button */
 	public void onStartStop(View view) {
+		Log.d(TAG, "onStartStop");
 		// Do something in response to button
 		final Button button = (Button) view;
 		Intent intent = new Intent(this, RespiStateManager.class);
