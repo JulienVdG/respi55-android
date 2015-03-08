@@ -19,6 +19,8 @@
  */
 package name.vdg.respi55;
 
+import java.util.Calendar;
+
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -170,6 +172,7 @@ public class RespiStateManager extends Service implements OnSharedPreferenceChan
 		mStarted = true;
 		mStartTime = System.nanoTime();
 		mRespiSound.start(mSoundMode, mEnableTicks, mEnable5s);
+		mNotificationBuilder.setWhen(Calendar.getInstance().getTimeInMillis());
 		startForeground(NOTIFICATION_ID, mNotificationBuilder.build());
 	}
 
