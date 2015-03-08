@@ -20,7 +20,6 @@
 package name.vdg.respi55;
 
 import android.app.Activity;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
@@ -53,7 +52,6 @@ public class RespiStateManager extends Service implements OnSharedPreferenceChan
 
 	/** the notification */
 	private NotificationCompat.Builder mNotificationBuilder;
-	private NotificationManager mNM;
 
 	/** config display states */
 	private boolean mDisplayDigits;
@@ -128,7 +126,6 @@ public class RespiStateManager extends Service implements OnSharedPreferenceChan
 
 	private void setupNotification(Context context)
 	{
-		mNM = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 		// Instantiate a Builder object.
 		mNotificationBuilder = new NotificationCompat.Builder(context);
 		// Creates an Intent for the Activity
@@ -167,8 +164,7 @@ public class RespiStateManager extends Service implements OnSharedPreferenceChan
 		mStarted = true;
 		mStartTime = System.nanoTime();
 		mRespiSound.start(mSoundMode, mEnableTicks, mEnable5s);
-		// Send the notification.
-		mNM.notify(NOTIFICATION_ID, mNotificationBuilder.build());
+		startForeground(NOTIFICATION_ID, mNotificationBuilder.build());
 	}
 
 	private void stop()
@@ -176,8 +172,7 @@ public class RespiStateManager extends Service implements OnSharedPreferenceChan
 		mStarted = false;
 		mStartTime = Long.MAX_VALUE;
 		mRespiSound.stop();
-		// Cancel the persistent notification.
-		mNM.cancel(NOTIFICATION_ID);
+		stopForeground(true);
 		stopSelf();
 	}
 
