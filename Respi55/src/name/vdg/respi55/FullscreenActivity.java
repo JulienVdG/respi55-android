@@ -89,6 +89,12 @@ public class FullscreenActivity extends Activity {
 	 */
 	private RespiView mRespiView;
 
+	/**
+	 * The start/stop button
+	 */
+	private Button mButton;
+	private boolean mStarted = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -100,6 +106,7 @@ public class FullscreenActivity extends Activity {
 
 		final View controlsView = findViewById(R.id.fullscreen_content_controls);
 		mRespiView = (RespiView) findViewById(R.id.fullscreen_content);
+		mButton = (Button) findViewById(R.id.startstop_button);
 
 
 		// Set up an instance of SystemUiHider to control the system UI for
@@ -145,7 +152,7 @@ public class FullscreenActivity extends Activity {
 						getActionBar().hide();
 					}
 				}
-				if (visible && AUTO_HIDE && mRespiStateManager.isStarted()) {
+				if (visible && AUTO_HIDE && mStarted) {
 					// Schedule a hide().
 					delayedHide(AUTO_HIDE_DELAY_MILLIS);
 				}
@@ -156,7 +163,7 @@ public class FullscreenActivity extends Activity {
 		mRespiView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				if (TOGGLE_ON_CLICK && mRespiStateManager.isStarted()) {
+				if (TOGGLE_ON_CLICK && mStarted) {
 					mSystemUiHider.toggle();
 				} else {
 					mSystemUiHider.show();
@@ -167,18 +174,7 @@ public class FullscreenActivity extends Activity {
 		// Upon interacting with UI controls, delay any scheduled hide()
 		// operations to prevent the jarring behavior of controls going away
 		// while interacting with the UI.
-		findViewById(R.id.startstop_button).setOnTouchListener(mDelayHideTouchListener);
-	}
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-
-		// Trigger the initial hide() shortly after the activity has been
-		// created, to briefly hint to the user that UI controls
-		// are available.
-
-
+		mButton.setOnTouchListener(mDelayHideTouchListener);
 	}
 
 	@Override
@@ -205,13 +201,7 @@ public class FullscreenActivity extends Activity {
 			RespiStateManager.LocalBinder b = (RespiStateManager.LocalBinder) binder;
 			mRespiStateManager = b.getService();
 			mRespiView.setRespiStateManager(mRespiStateManager);
-			final Button button = (Button) findViewById(R.id.startstop_button);
-			if (mRespiStateManager.isStarted()) {
-				button.setText(R.string.stop_button);
-				delayedHide(100);
-			} else {
-				button.setText(R.string.start_button);
-			}
+			updateButtonState(mRespiStateManager.isStarted());
 		}
 
 		public void onServiceDisconnected(ComponentName className) {
@@ -225,7 +215,23 @@ public class FullscreenActivity extends Activity {
 	public void onWindowFocusChanged (boolean hasFocus) {
 		Log.d(TAG, "onWindowFocusChanged");
 		super.onWindowFocusChanged(hasFocus);
-		if (hasFocus) mRespiStateManager.setAudioFocus(this);
+		if (hasFocus && mRespiStateManager != null) {
+			mRespiStateManager.setAudioFocus(this);
+			updateButtonState(mRespiStateManager.isStarted());
+		}
+	}
+
+	private void updateButtonState(boolean started) {
+		if (started != mStarted) {
+			mStarted = started;
+			if (started) {
+				mButton.setText(R.string.stop_button);
+				delayedHide(100);
+			} else {
+				mButton.setText(R.string.start_button);
+				cancelHide();
+			}
+		}
 	}
 
 	/**
@@ -249,7 +255,7 @@ public class FullscreenActivity extends Activity {
 	Runnable mHideRunnable = new Runnable() {
 		@Override
 		public void run() {
-			if (mRespiStateManager.isStarted()) {
+			if (mStarted) {
 				mSystemUiHider.hide();
 			}
 		}
@@ -262,6 +268,14 @@ public class FullscreenActivity extends Activity {
 	private void delayedHide(int delayMillis) {
 		mHideHandler.removeCallbacks(mHideRunnable);
 		mHideHandler.postDelayed(mHideRunnable, delayMillis);
+	}
+
+	/**
+	 * Canceling any previously scheduled calls and call show now!
+	 */
+	private void cancelHide() {
+		mHideHandler.removeCallbacks(mHideRunnable);
+		mSystemUiHider.show();
 	}
 
 	@Override
@@ -316,26 +330,21 @@ public class FullscreenActivity extends Activity {
 
 	/** Called when the user clicks the StartStop button */
 	public void onStartStop(View view) {
-		Log.d(TAG, "onStartStop");
+		Log.d(TAG, "onStartStop "+mStarted);
 		// Do something in response to button
-		final Button button = (Button) view;
 		Intent intent = new Intent(this, RespiStateManager.class);
-		if (mRespiStateManager.isStarted()) {
+		if (mStarted) {
 			// Stop it
-			button.setText(R.string.start_button);
-
 			intent.putExtra(RespiStateManager.EXTRA_CMD_ID, RespiStateManager.Command.Stop);
 			startService(intent);
 
-			mSystemUiHider.show();
+			updateButtonState(false);
 		} else {
 			// Start it
-			button.setText(R.string.stop_button);
-
 			intent.putExtra(RespiStateManager.EXTRA_CMD_ID, RespiStateManager.Command.Start);
 			startService(intent);
 
-			delayedHide(100);
+			updateButtonState(true);
 		}
 	}
 }
