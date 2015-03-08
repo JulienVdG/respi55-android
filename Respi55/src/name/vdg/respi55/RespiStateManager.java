@@ -89,6 +89,7 @@ public class RespiStateManager extends Service implements OnSharedPreferenceChan
     public void onDestroy() {
 		Log.d(TAG, "onDestroy");
 		if (mStarted) stop();
+		mRespiSound.removeIntentFilters(this);
 	}
 
 	@Override

@@ -95,8 +95,11 @@ public class RespiSound extends BroadcastReceiver {
 			filter.addAction(AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED);
 		filter.addAction(AudioManager.ACTION_AUDIO_BECOMING_NOISY);
 		context.registerReceiver(this, filter);
+	}
 
-		// TODO unregisterReceiver somewhere
+	public void removeIntentFilters(Context context)
+	{
+		context.unregisterReceiver(this);
 	}
 
 	@Override public void onReceive(Context context, Intent intent) {
