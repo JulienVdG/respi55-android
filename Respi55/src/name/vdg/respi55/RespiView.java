@@ -132,7 +132,9 @@ public class RespiView extends SurfaceView implements SurfaceHolder.Callback {
 	public void doDraw(Canvas canvas, long elapsed) {
 		mLock.lock();  // block until condition holds
 		try {
-			boolean started = mRespiStateManager.isStarted();
+			boolean started = false;
+			if (mRespiStateManager != null)
+				started = mRespiStateManager.isStarted();
 			if (mStarted != started)
 			{
 				mStarted = started;
