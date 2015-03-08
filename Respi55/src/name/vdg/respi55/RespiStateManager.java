@@ -22,18 +22,29 @@ package name.vdg.respi55;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.media.AudioManager;
+import android.os.Binder;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-//import android.util.Log;
+import android.util.Log;
 
-public class RespiStateManager implements OnSharedPreferenceChangeListener {
-//	private static final String TAG = "RespiStateManager";
+public class RespiStateManager extends Service implements OnSharedPreferenceChangeListener {
+	private static final String TAG = "RespiStateManager";
 	private static final int NOTIFICATION_ID = R.string.notification_message;
+
+	public final static String EXTRA_CMD_ID = "name.vdg.respi55.STATE_CMD_ID";
+	public enum Command { Start, Stop };
+
+	/**
+	 * The Binder for activity access to methods
+	 */
+	private final IBinder mBinder = new LocalBinder();
 
 	/**
 	 * The Sound manager
@@ -55,18 +66,12 @@ public class RespiStateManager implements OnSharedPreferenceChangeListener {
 	private boolean mStarted = false;
 	private long mStartTime = Long.MAX_VALUE;
 
-	private static RespiStateManager holder = null;
-	public static RespiStateManager getInstance(Context context) {
-		if (null == holder)
-			holder = new RespiStateManager(context.getApplicationContext());
-		return holder;
-	}
+	@Override
+    public void onCreate() {
+		Log.d(TAG, "onCreate");
+		mRespiSound = new RespiSound(this);
 
-
-	public RespiStateManager(Context context) {
-		mRespiSound = new RespiSound(this, context);
-
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 
 		// Display settings
 		onSharedPreferenceChanged(sp, SettingsActivity.KEY_DISPLAY_DIGITS);
@@ -79,7 +84,13 @@ public class RespiStateManager implements OnSharedPreferenceChangeListener {
 		// listen to preference change
 		sp.registerOnSharedPreferenceChangeListener(this);
 
-		setupNotification(context);
+		setupNotification(this);
+	}
+
+	@Override
+    public void onDestroy() {
+		Log.d(TAG, "onDestroy");
+		if (mStarted) stop();
 	}
 
 	@Override
@@ -132,16 +143,26 @@ public class RespiStateManager implements OnSharedPreferenceChangeListener {
 		mNotificationBuilder.setOngoing(true);
 	}
 
+	@Override
+	public IBinder onBind(Intent arg0) {
+		return mBinder;
+	}
+
+	public class LocalBinder extends Binder {
+		RespiStateManager getService() {
+			return RespiStateManager.this;
+		}
+	}
+
 	public long getStartTime() {
 		return mStartTime;
 	}
-
 
 	public boolean isStarted() {
 		return mStarted;
 	}
 
-	public void start()
+	private void start()
 	{
 		mStarted = true;
 		mStartTime = System.nanoTime();
@@ -150,13 +171,14 @@ public class RespiStateManager implements OnSharedPreferenceChangeListener {
 		mNM.notify(NOTIFICATION_ID, mNotificationBuilder.build());
 	}
 
-	public void stop()
+	private void stop()
 	{
 		mStarted = false;
 		mStartTime = Long.MAX_VALUE;
 		mRespiSound.stop();
 		// Cancel the persistent notification.
 		mNM.cancel(NOTIFICATION_ID);
+		stopSelf();
 	}
 
 	public void setAudioFocus(Activity a)
@@ -171,4 +193,24 @@ public class RespiStateManager implements OnSharedPreferenceChangeListener {
 	{
 		return mDisplayDigits;
 	}
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		Command cmd = (Command) intent.getSerializableExtra(EXTRA_CMD_ID);
+		switch (cmd) {
+		case Start:
+			Log.d(TAG, "service started with start intent");
+			start();
+			break;
+		case Stop:
+			Log.d(TAG, "service started with stop intent");
+			stop();
+			break;
+		default:
+			Log.d(TAG, "service started with unkown intent command");
+			break;
+		}
+		return Service.START_NOT_STICKY;
+	}
+
 }

@@ -57,8 +57,9 @@ public class RespiSound extends BroadcastReceiver {
 	private boolean mBtHeadsetOn = false;
 
 
-	public RespiSound(RespiStateManager respiStateManager, Context context) {
+	public RespiSound(RespiStateManager respiStateManager) {
 		mRespiStateManager = respiStateManager;
+		Context context = respiStateManager;
 
 		mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 

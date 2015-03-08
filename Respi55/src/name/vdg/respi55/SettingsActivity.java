@@ -21,8 +21,13 @@ package name.vdg.respi55;
 
 import android.annotation.TargetApi;
 import android.app.ActionBar;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -41,6 +46,10 @@ public class SettingsActivity extends PreferenceActivity {
 	public static final String KEY_ENABLE_TICKS = "pref_key_enable_ticks";
 	public static final String KEY_ENABLE_5S = "pref_key_enable_5s";
 
+	/**
+	 * The instance of the {@link RespiStateManager} for this activity.
+	 */
+	private RespiStateManager mRespiStateManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +57,38 @@ public class SettingsActivity extends PreferenceActivity {
 		setupActionBar();
 	}
 
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Intent intent= new Intent(this, RespiStateManager.class);
+		bindService(intent, mConnection,
+				Context.BIND_AUTO_CREATE);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		unbindService(mConnection);
+	}
+
+	private ServiceConnection mConnection = new ServiceConnection() {
+
+		public void onServiceConnected(ComponentName className, 
+				IBinder binder) {
+			RespiStateManager.LocalBinder b = (RespiStateManager.LocalBinder) binder;
+			mRespiStateManager = b.getService();
+		}
+
+		public void onServiceDisconnected(ComponentName className) {
+			mRespiStateManager = null;
+		}
+	};
+
 	@Override
 	public void onWindowFocusChanged (boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		if (hasFocus) RespiStateManager.getInstance(this).setAudioFocus(this);
+		if (hasFocus) mRespiStateManager.setAudioFocus(this);
 	}
 
 	/**

@@ -59,6 +59,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="name.vdg.respi55.FullscreenActivity" />
         </activity>
+        <service
+            android:name=".RespiStateManager" >
+        </service>
+
     </application>
 
 </manifest>

@@ -23,10 +23,14 @@ import name.vdg.respi55.util.SystemUiHider;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -77,6 +81,10 @@ public class FullscreenActivity extends Activity {
 	 */
 	private RespiStateManager mRespiStateManager;
 
+	/**
+	 * The instance of the {@link RespiView} for this activity.
+	 */
+	private RespiView mRespiView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,16 +94,13 @@ public class FullscreenActivity extends Activity {
 
 		setContentView(R.layout.activity_fullscreen);
 
-		mRespiStateManager = RespiStateManager.getInstance(this);
-
 		final View controlsView = findViewById(R.id.fullscreen_content_controls);
-		final RespiView contentView = (RespiView) findViewById(R.id.fullscreen_content);
+		mRespiView = (RespiView) findViewById(R.id.fullscreen_content);
 
-		contentView.setRespiStateManager(mRespiStateManager);
 
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
-		mSystemUiHider = SystemUiHider.getInstance(this, contentView, HIDER_FLAGS);
+		mSystemUiHider = SystemUiHider.getInstance(this, mRespiView, HIDER_FLAGS);
 		mSystemUiHider.setup();
 		mSystemUiHider
 		.setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener() {
@@ -144,7 +149,7 @@ public class FullscreenActivity extends Activity {
 		});
 
 		// Set up the user interaction to manually show or hide the system UI.
-		contentView.setOnClickListener(new View.OnClickListener() {
+		mRespiView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				if (TOGGLE_ON_CLICK && mRespiStateManager.isStarted()) {
@@ -169,14 +174,44 @@ public class FullscreenActivity extends Activity {
 		// created, to briefly hint to the user that UI controls
 		// are available.
 
-		final Button button = (Button) findViewById(R.id.startstop_button);
-		if (mRespiStateManager.isStarted()) {
-			button.setText(R.string.stop_button);
-			delayedHide(100);
-		} else {
-			button.setText(R.string.start_button);
-		}
+
 	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Intent intent= new Intent(this, RespiStateManager.class);
+		bindService(intent, mConnection,
+				Context.BIND_AUTO_CREATE);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		unbindService(mConnection);
+	}
+
+	private ServiceConnection mConnection = new ServiceConnection() {
+
+		public void onServiceConnected(ComponentName className, 
+				IBinder binder) {
+			RespiStateManager.LocalBinder b = (RespiStateManager.LocalBinder) binder;
+			mRespiStateManager = b.getService();
+			mRespiView.setRespiStateManager(mRespiStateManager);
+			final Button button = (Button) findViewById(R.id.startstop_button);
+			if (mRespiStateManager.isStarted()) {
+				button.setText(R.string.stop_button);
+				delayedHide(100);
+			} else {
+				button.setText(R.string.start_button);
+			}
+		}
+
+		public void onServiceDisconnected(ComponentName className) {
+			mRespiStateManager = null;
+			mRespiView.setRespiStateManager(mRespiStateManager);
+		}
+	};
 
 	@Override
 	public void onWindowFocusChanged (boolean hasFocus) {
@@ -274,18 +309,21 @@ public class FullscreenActivity extends Activity {
 	public void onStartStop(View view) {
 		// Do something in response to button
 		final Button button = (Button) view;
+		Intent intent = new Intent(this, RespiStateManager.class);
 		if (mRespiStateManager.isStarted()) {
 			// Stop it
 			button.setText(R.string.start_button);
 
-			mRespiStateManager.stop();
+			intent.putExtra(RespiStateManager.EXTRA_CMD_ID, RespiStateManager.Command.Stop);
+			startService(intent);
 
 			mSystemUiHider.show();
 		} else {
 			// Start it
 			button.setText(R.string.stop_button);
 
-			mRespiStateManager.start();
+			intent.putExtra(RespiStateManager.EXTRA_CMD_ID, RespiStateManager.Command.Start);
+			startService(intent);
 
 			delayedHide(100);
 		}
