@@ -134,6 +134,11 @@ public class RespiStateManager extends Service implements OnSharedPreferenceChan
 	                PendingIntent.FLAG_UPDATE_CURRENT);
 		// Puts the PendingIntent into the notification builder
 		mNotificationBuilder.setContentIntent(pi);
+		// Create an intent to send the stop command
+		PendingIntent psi = PendingIntent.getService(context, 0,
+					new Intent(context, RespiStateManager.class).putExtra(EXTRA_CMD_ID, Command.Stop),
+					PendingIntent.FLAG_UPDATE_CURRENT);
+		mNotificationBuilder.addAction(R.drawable.abc_ic_clear, getResources().getString(R.string.stop_button), psi);
 		mNotificationBuilder.setContentTitle(context.getResources().getString(R.string.app_name));
 		mNotificationBuilder.setContentText(context.getResources().getString(R.string.notification_message));
 		mNotificationBuilder.setSmallIcon(R.drawable.ic_stat_started);
