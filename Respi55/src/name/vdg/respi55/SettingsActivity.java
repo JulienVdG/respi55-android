@@ -88,7 +88,7 @@ public class SettingsActivity extends PreferenceActivity {
 	@Override
 	public void onWindowFocusChanged (boolean hasFocus) {
 		super.onWindowFocusChanged(hasFocus);
-		if (hasFocus) mRespiStateManager.setAudioFocus(this);
+		if (hasFocus && mRespiStateManager != null) mRespiStateManager.setAudioFocus(this);
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class SettingsActivity extends PreferenceActivity {
 			// to their values. When their values change, their summaries are
 			// updated to reflect the new value, per the Android Design
 			// guidelines.
-			bindPreferenceSummaryToValue(findPreference("sound_enable"));
+			bindPreferenceSummaryToValue(findPreference(KEY_SOUND_ENABLE));
 
 		} else {
 			// Display the fragment as the main content.
@@ -217,7 +217,7 @@ public class SettingsActivity extends PreferenceActivity {
 			// to their values. When their values change, their summaries are
 			// updated to reflect the new value, per the Android Design
 			// guidelines.
-			bindPreferenceSummaryToValue(findPreference("pref_key_sound_enable"));
+			bindPreferenceSummaryToValue(findPreference(KEY_SOUND_ENABLE));
 		}
 	}
 
